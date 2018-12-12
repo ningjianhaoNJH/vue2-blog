@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import {AppMain, layoutHeader, layoutFooter} from './components/';
+  import {AppMain, layoutHeader, layoutFooter} from './components/index.js';
 
   export default {
     name: "layout",
@@ -19,6 +19,15 @@
       AppMain,
       layoutHeader,
       layoutFooter
+    },
+    data() {
+      return {
+        uname: ''
+      }
+    },
+    mounted() {
+      // this.uname = window.localStorage.getItem('user');
+
     },
   }
 </script>

@@ -2,7 +2,7 @@
     <div class="left-aside">
         <Card style="width:100%">
             <div class="left-aside-avatar" style="text-align:center">
-                <img src="../../../assets/logo.png">
+                <img src="http://ico-list.oss-cn-hangzhou.aliyuncs.com/cryptovalut/20181212135757ijbtjjQWMT.jpg">
                 <div class="left-aside-avatar-badge">
                     <span>原创</span>
                     <span>喜欢</span>
