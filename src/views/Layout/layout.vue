@@ -12,7 +12,6 @@
 
 <script>
   import {AppMain, layoutHeader, layoutFooter} from './components/index.js';
-
   export default {
     name: "layout",
     components: {
@@ -20,15 +19,18 @@
       layoutHeader,
       layoutFooter
     },
+
     data() {
       return {
         uname: ''
       }
     },
-    mounted() {
-      // this.uname = window.localStorage.getItem('user');
-
+    created() {
+      this.$store.commit('SET_USER_INFO', window.localStorage.getItem('userInfo') ? JSON.parse(window.localStorage.getItem('userInfo')) : null)
     },
+    methods: {
+
+    }
   }
 </script>
 

@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-const TokenKey = 'Interior-Token';
+const TokenKey = 'blog-token';
 
 export function getToken() {
   return Cookies.get(TokenKey);

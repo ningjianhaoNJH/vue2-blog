@@ -7,3 +7,14 @@
 <style>
   @import 'styles/common.css';
 </style>
+<script>
+  export default {
+    name: "app",
+
+    mounted() {
+      this.$Message.config({
+        top: 100,
+      });
+    },
+  }
+</script>

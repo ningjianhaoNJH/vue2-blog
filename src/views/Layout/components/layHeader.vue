@@ -8,59 +8,78 @@
       </div>
       </Col>
       <Col :sm="24" :xs="0" :md="24" :lg="24">
-      <div class="pc-head">
-        <div class="pc-head-search"><Input search enter-button placeholder="输入博客文章" class="pc-head-search-input"/></div>
-        <div class="pc-head-nav">
-          <ul>
-            <li>
-              <span @click="$router.push('/write')">写博客</span>
-            </li>
-            <li>
-              <span @click="loginFun(true)">登录</span>
-              <span @click="loginFun(false)">注册</span>
-            </li>
-            <li>
-              <Avatar src="https://i.loli.net/2017/08/21/599a521472424.jpg"/>
-            </li>
-          </ul>
+        <div class="pc-head">
+          <div class="pc-head-search"><Input search enter-button placeholder="输入博客文章" class="pc-head-search-input"/></div>
+          <div class="pc-head-nav">
+            <ul>
+              <li class="nav-item" style="margin-right:20px;">
+                <span @click="$router.push('/write')">写博客</span>
+              </li>
+              <li class="nav-item" v-if="!userInfo">
+                <span @click="drawerFlag = true">登录/注册</span>
+              </li>
+              <li class="nav-item" v-else>
+                <Dropdown  @on-click="logoutFun">
+                  <a href="javascript:void(0)" style="color:#fff;">
+                    {{userInfo.username}}
+                    <Avatar style="width:42px;" :src="userInfo.avatar"/>
+                  </a>
+                  <DropdownMenu slot="list">
+                    <DropdownItem name="1">退出登录</DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
       </Col>
     </Row>
     <Drawer title="Basic Drawer" placement="left" :closable="false" v-model="drawerFlag">
-      <left-aside v-if="false"></left-aside>
-      <reg-login :drawerType="drawerType"></reg-login>
+      <reg-login @loginSucc="drawerTypeFun"></reg-login>
     </Drawer>
   </header>
 </template>
 
 <script>
-  import leftAside from './leftAside';
-  import regLogin from './regLogin';
-  import logImg from '../../../assets/logo.png';
+import { mapGetters } from 'vuex';
+import leftAside from './leftAside.vue';
+import regLogin from './regLogin.vue';
+import logImg from '../../../assets/logo.png';
 
-  export default {
-    name: "lay-header",
-    data() {
-      return {
-        logImg: logImg,
-        drawerFlag: false,
-        drawerType: false
+export default {
+  name: 'lay-header',
+  computed: {
+    ...mapGetters({
+      userInfo: 'userInfo',
+    }),
+  },
+  data() {
+    return {
+      logImg,
+      drawerFlag: false,
+    };
+  },
+  components: {
+    leftAside,
+    regLogin,
+  },
+  methods: {
+    drawerTypeFun(v) {
+      this.drawerFlag = v
+    },
+    logoutFun(n) {
+      switch (n) {
+        case '1':
+          this.$store.dispatch('logoutHandler');
+          break;
+        default:
+          console.log('默认')
+          break;
       }
     },
-    components: {
-      leftAside,
-      regLogin
-    },
-    methods: {
-      loginFun(n) {
-        this.drawerType = n;
-        this.drawerFlag = true;
-      }
-    }
-  }
+  },
+};
 </script>
-
 <style lang="less" scoped>
   header {
     .mobile-head {
@@ -86,7 +105,7 @@
         }
       }
       .pc-head-nav {
-        & li {
+        & li.nav-item {
           display: inline-block;
           color: #fff;
           & span {
@@ -97,7 +116,6 @@
         }
       }
     }
-
   }
 
   @media screen and (max-width: 1200px) {
@@ -105,4 +123,7 @@
       padding: 0 20px;
     }
   }
+  /*@media screen and (min-width: 768px) {*/
+
+  /*}*/
 </style>

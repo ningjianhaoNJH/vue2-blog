@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Message } from 'iview';
 import { getToken } from '@/utils/auth';
 
 // 创建axios实例
@@ -30,6 +31,7 @@ service.interceptors.response.use(
     return response.data;
   },
   error => {
+    Message.error(error.response.data.message);
     return Promise.reject(error.message);
   },
 );

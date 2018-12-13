@@ -1,31 +1,13 @@
 <template>
   <div class="reg-login">
-    <div class="reg-login-container">
-      <h2 style="margin-bottom:15px;text-align: center">{{drawerType ? '登录' : '注册'}}</h2>
-      <Form :model="loginForm" label-position="left">
-        <FormItem prop="user">
-          <Input type="text" v-model="loginForm.username" placeholder="Username">
-          <Icon type="ios-person-outline" slot="prepend"></Icon>
-          </Input>
-        </FormItem>
-        <FormItem prop="user">
-          <Input type="password" v-model="loginForm.password" placeholder="password">
-          <Icon type="ios-person-outline" slot="prepend"></Icon>
-          </Input>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" long @click="subForm">{{drawerType ? '登录' : '注册'}}</Button>
-        </FormItem>
-      </Form>
+    <div v-show="!userInfo" class="reg-login-container">
+      <h2 style="margin-bottom:15px;text-align: center">登录/注册</h2>
+      <login-register @on-drawer="emitSucc"></login-register>
     </div>
     <div class="m-left-dialog">
-      <div>
-        <Button type="primary" long>登录</Button>
-        <Button style="margin-top:15px;" type="primary" long>注册</Button>
-      </div>
-      <Card v-show="false" style="width:100%">
+      <Card v-if="userInfo" style="width:100%">
         <div class="left-aside-avatar" style="text-align:center">
-          <img class="avatar-style" src="../../../assets/logo.png">
+          <img class="avatar-style" :src="userInfo.avatar">
           <div class="left-aside-avatar-badge">
             <span>原创</span>
             <span>喜欢</span>
@@ -69,18 +51,22 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
+  import loginRegister from '../../../components/loginRegister.vue';
   export default {
     name: "reg-login",
-    props: {
-      drawerType: Boolean
+    computed: {
+      ...mapGetters({
+        userInfo: 'userInfo',
+      }),
+    },
+    components: {
+      loginRegister
     },
     data() {
       return {
-        loginForm: {
-          username: 'aaa',
-          password: '123',
-        },
         collVal: '1',
+        isLogin: false,
         archiveList: [
           {
             dateRange: '2018年11月',
@@ -175,13 +161,8 @@
       }
     },
     methods: {
-      subForm(t) {
-        this.$store.dispatch('postLogin', this.loginForm).then().catch((err) => {
-          console.log(err)
-        })
-        if (t) {
-        } else {
-        }
+      emitSucc(v) {
+        this.$emit('loginSucc', false);
       }
     }
   };
@@ -231,7 +212,7 @@
     }
 
     .reg-login-container {
-      display: none;
+      /*display: none;*/
     }
   }
 </style>
