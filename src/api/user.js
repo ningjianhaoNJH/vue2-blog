@@ -14,3 +14,9 @@ export function register(data) {
     data,
   });
 }
+export function homeData() {
+  return request({
+    url: '/home',
+    method: 'get',
+  });
+}

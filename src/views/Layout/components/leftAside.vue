@@ -2,18 +2,25 @@
   <div class="left-aside">
     <Card style="width:100%">
       <div class="left-aside-avatar" style="text-align:center">
-        <img :src="userInfo.avatar">
+        <img v-if="userInfo.username" :src="userInfo.avatar">
+        <img v-else-if="homeData.userInfo" :src="homeData.userInfo.avatar">
         <div class="left-aside-avatar-badge">
           <span>原创</span>
           <span>喜欢</span>
           <span>评论</span>
           <span>访问</span>
         </div>
-        <div class="left-aside-avatar-badge">
+        <div v-if="userInfo.username" class="left-aside-avatar-badge">
           <span>{{userInfo.total}}</span>
-          <span>{{userInfo.fans}}</span>
+          <span>{{userInfo.like}}</span>
           <span>{{userInfo.comment}}</span>
           <span>{{userInfo.access}}</span>
+        </div>
+        <div v-else-if="homeData.userInfo"  class="left-aside-avatar-badge">
+          <span>{{homeData.userInfo.total}}</span>
+          <span>{{homeData.userInfo.like}}</span>
+          <span>{{homeData.userInfo.comment}}</span>
+          <span>{{homeData.userInfo.access}}</span>
         </div>
       </div>
     </Card>
@@ -178,8 +185,9 @@
     computed: {
       ...mapGetters({
         userInfo: 'userInfo',
+        homeData: 'homeData'
       })
-    },
+    }
   }
 </script>
 

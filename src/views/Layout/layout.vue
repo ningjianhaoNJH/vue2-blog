@@ -25,9 +25,6 @@
         uname: ''
       }
     },
-    created() {
-      this.$store.commit('SET_USER_INFO', window.localStorage.getItem('userInfo') ? JSON.parse(window.localStorage.getItem('userInfo')) : null)
-    },
     methods: {
 
     }

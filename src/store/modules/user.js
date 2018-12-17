@@ -1,14 +1,18 @@
-import { login, register } from '@/api/user';
+import { login, register, homeData } from '@/api/user';
 import { setToken, removeToken } from '@/utils/auth';
 
 const user = {
   state: {
-    userInfo: null,
+    userInfo: {},
+    homeData: {},
   },
 
   mutations: {
     SET_USER_INFO: (state, payload) => {
       state.userInfo = payload;
+    },
+    SET_HOME_DATA: (state, payload) => {
+      state.homeData = payload;
     },
   },
 
@@ -36,8 +40,18 @@ const user = {
     },
     logoutHandler({ commit }) {
       removeToken();
-      commit('SET_USER_INFO', null);
+      commit('SET_USER_INFO', {});
       window.localStorage.clear();
+    },
+    getHomeData({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        homeData(payload).then((res) => {
+          commit('SET_HOME_DATA', res.data);
+          resolve();
+        }).catch((error) => {
+          reject(error);
+        });
+      });
     },
   },
 };

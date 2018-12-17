@@ -10,7 +10,6 @@
 <script>
   export default {
     name: "app",
-
     mounted() {
       this.$Message.config({
         top: 100,

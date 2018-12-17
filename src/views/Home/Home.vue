@@ -1,15 +1,16 @@
 <template>
   <div class="home">
     <div>
-      <Card class="pc-main-blog" :bordered="false" v-for="(v,k) in msgList" :key="k">
+      <Card class="pc-main-blog" :bordered="true" v-for="(v,k) in homeData.hotBlog" :key="k">
         <p class="pc-main-blog-title" @click="toBlog(v.id)" slot="title">{{v.title}}{{k}}</p>
-        <p style="word-break: break-all;">{{v.msg}}</p>
+        <div style="word-break: break-all;" v-html="v.content"></div>
       </Card>
     </div>
     <Button type="success" long>加载更多</Button>
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import { mapGetters } from 'vuex';
   export default {
     name: 'Home',
     data() {
@@ -57,6 +58,11 @@
           },
         ],
       };
+    },
+    computed: {
+      ...mapGetters({
+        homeData: 'homeData'
+      })
     },
     methods: {
       toBlog(id) {

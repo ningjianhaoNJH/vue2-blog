@@ -15,7 +15,7 @@
               <li class="nav-item" style="margin-right:20px;">
                 <span @click="$router.push('/write')">写博客</span>
               </li>
-              <li class="nav-item" v-if="!userInfo">
+              <li class="nav-item" v-if="!userInfo.username">
                 <span @click="drawerFlag = true">登录/注册</span>
               </li>
               <li class="nav-item" v-else>

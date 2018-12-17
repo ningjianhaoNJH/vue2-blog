@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import user from './modules/user';
+import blogModules from './modules/blog';
 import getters from './getter';
 
 Vue.use(Vuex);
@@ -8,6 +9,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   modules: {
     user,
+    blogModules,
   },
   getters,
 });

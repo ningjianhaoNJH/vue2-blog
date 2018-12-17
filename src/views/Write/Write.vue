@@ -2,7 +2,7 @@
   <div class="write">
     <div class="write-title">
       <Row>
-        <Col span="20"><Input v-model="blogTitle" placeholder="输入博客标题"  /></Col>
+        <Col span="20"><Input v-model="formBlog.title" placeholder="输入博客标题"  /></Col>
         <Col span="4">
           <Button @click="$router.go(-1)" style="float:right;background-color:#808695;color:#fff;" size="small" icon="md-close"></Button>
         </Col>
@@ -13,30 +13,28 @@
       <div id="editor"></div>
     </div>
     <div class="writer-container">
-      <Form ref="formCustom" :model="formCustom" :rules="ruleCustom" :label-width="80">
+      <Form ref="formBlog" :model="formBlog"  :label-width="80">
         <FormItem label="文章标签" prop="label">
-          <Input v-show="false" v-model="formCustom.label"></Input>
-          <div v-for="(v,k) in labelList" :key="k" class="writer-label" ref="labelCon">
-            <span @blur="loseFocus(k, $event)"  contenteditable="true" v-html="v.title"></span>
+          <div v-for="(v,k) in labelList" :key="k" class="writer-label">
+            <span @blur="loseFocus(k, $event, 'labelList')"  v-focus="labelActive === k" contenteditable="true" v-text="v"></span>
             <Icon @click="closeTag('labelList', k)" type="ios-close" />
           </div>
           <div><Button class="writer-label-btn" @click="addLabelFun('labelList')" type="text" icon="ios-add-circle">添加标签</Button></div>
         </FormItem>
         <FormItem label="个人分类" prop="label">
-          <Input v-show="false" v-model="formCustom.classification"></Input>
           <div v-for="(v,k) in classList" :key="k" class="writer-label">
-            <span @blur="loseFocus(k, $event)" contenteditable="true" v-html="v.title"></span>
+            <span @blur="loseFocus(k, $event, 'classList')" v-focus="labelActive === k" contenteditable="true" v-text="v"></span>
             <Icon @click="closeTag('classList', k)" type="ios-close" />
           </div>
-          <div><Button class="writer-label-btn" @click="addLabelFun('classList')" type="text" icon="ios-add-circle">添加标签</Button></div>
+          <div><Button class="writer-label-btn" @click="addLabelFun('classList')" type="text" icon="ios-add-circle">添加分类</Button></div>
         </FormItem>
         <FormItem label="文章类型" prop="type">
-          <Select v-model="formCustom.type" style="width:200px">
+          <Select v-model="formBlog.type" style="width:200px">
             <Option v-for="item in articleList" :value="item.id" :key="item.id">{{ item.name }}</Option>
           </Select>
         </FormItem>
         <FormItem>
-          <Button type="primary" @click="handleSubmit('formCustom')">发布博客</Button>
+          <Button type="primary" @click="handleSubmit('formBlog')">发布博客</Button>
         </FormItem>
       </Form>
     </div>
@@ -45,27 +43,28 @@
 <script type="text/ecmascript-6">
   import CKEditor from '@ckeditor/ckeditor5-build-decoupled-document';
   import  '@ckeditor/ckeditor5-build-decoupled-document/build/translations/zh-cn';
+  import {mapGetters} from 'vuex';
   export default{
     name: 'Write',
-    components: {
+    computed: {
+      ...mapGetters({
+        userClass: 'userClass'
+      })
     },
     data() {
       return {
         editor: null,
-        blogTitle: '',
-        formCustom: {
+        labelActive: 0,
+        classActive:0,
+        formBlog: {
+          title: '',
+          content: '',
           label: '',
-          classification: '',
-          type: 0
+          type: '',
+          classic: '',
         },
-        ruleCustom: {},
         labelList: [],
-        classList: [
-          {
-            title: 'Nodejs',
-            id: 1,
-          }
-        ],
+        classList: [],
         articleList: [
           {
             id: 0,
@@ -104,19 +103,31 @@
         });
       },
       handleSubmit() {
-        console.log(this.editor.getData())
+        this.formBlog.content = this.editor.getData();
+        this.formBlog.label = this.labelList.toString();
+        this.formBlog.classic = this.classList.toString();
+        this.$store.dispatch('postBlog', this.formBlog).then(() => {
+          this.$Message.success('提交成功');
+          this.$router.go(-1);
+        }).catch()
       },
       addLabelFun(name) {
-        if (this[name].length>= 4) return;
-        this[name].push({title: '&nbsp'})
-      },
-      loseFocus(k, e) {
-        let val = e.target.innerText.trim();
-        if (val) {
-          this.formCustom.label += `${val} `;
+        if (this[name].length> 4) return;
+        this[name].push('');
+        if (name === 'labelList') {
+          this.labelActive = this[name].length - 1;
         } else {
-          this.closeTag('labelList', 1)
+          this.classActive =  this[name].length - 1;
         }
+      },
+      loseFocus(k, e, arr) {
+        let val = e.target.innerText.trim();
+        if (!val) {
+          this[arr].splice(this[arr].length-1,1);
+        } else {
+          this[arr][k] = val;
+        }
+        this[arr] = [...new Set(this[arr])];
       },
       closeTag(n,k) {
         this[n].splice(k,1)

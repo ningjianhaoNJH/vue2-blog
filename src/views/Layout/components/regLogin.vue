@@ -1,11 +1,11 @@
 <template>
   <div class="reg-login">
-    <div v-show="!userInfo" class="reg-login-container">
+    <div v-show="!userInfo.username" class="reg-login-container">
       <h2 style="margin-bottom:15px;text-align: center">登录/注册</h2>
       <login-register @on-drawer="emitSucc"></login-register>
     </div>
     <div class="m-left-dialog">
-      <Card v-if="userInfo" style="width:100%">
+      <Card v-if="userInfo.username" style="width:100%">
         <div class="left-aside-avatar" style="text-align:center">
           <img class="avatar-style" :src="userInfo.avatar">
           <div class="left-aside-avatar-badge">

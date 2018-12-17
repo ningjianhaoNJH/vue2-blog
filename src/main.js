@@ -8,15 +8,18 @@ import '../theme/index.less';
 
 Vue.use(iView);
 Vue.config.productionTip = false;
-// router.beforeEach((to, from, next) => {
-//   iView.LoadingBar.start();
-//   next();
-// });
-//
-// router.afterEach(() => {
-//   iView.LoadingBar.finish();
-// });
+
+Vue.directive('focus', {
+  inserted(el) {
+    el.focus();
+  },
+});
+
 new Vue({
+  created() {
+    this.$store.dispatch('getHomeData');
+    this.$store.commit('SET_USER_INFO', window.localStorage.getItem('userInfo') ? JSON.parse(window.localStorage.getItem('userInfo')) : {});
+  },
   router,
   store,
   render: h => h(App),
