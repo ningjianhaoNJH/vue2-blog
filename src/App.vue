@@ -12,7 +12,7 @@
     name: "app",
     mounted() {
       this.$Message.config({
-        top: 100,
+        top: 11111100,
       });
     },
   }
